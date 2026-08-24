@@ -53,7 +53,7 @@ public class InventoryService {
         );
     }
 
-    @CacheEvict(cacheNames = INVENTORY_CACHE, key = "#request.sku")
+    @CacheEvict(cacheNames = INVENTORY_CACHE, key = "#request.sku()")
     public ReleaseResponse release(ReleaseRequest request) {
         Reservation reservation = repository.findById(request.sku()).orElseThrow(() -> new SkuNotFoundException(request.sku()));
 
