@@ -1,8 +1,6 @@
-package com.orderflow.order.entity;
+package com.orderflow.payment.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,24 +11,22 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "Payments")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "orders")
-public class Order {
+public class Payment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private  String sku;
+    private String chargeId;
 
-    private int qty;
-
-    private String customerId;
+    private Long orderId;
 
     private BigDecimal amount;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private String status;
 }

@@ -5,9 +5,9 @@ import com.orderflow.order.entity.Order;
 import java.math.BigDecimal;
 
 public record OrderResponse(
-        Long orderId,
+        Long id,
         String sku,
-        int quantity,
+        int qty,
         String customerId,
         BigDecimal amount,
         String status
@@ -15,8 +15,8 @@ public record OrderResponse(
 
     public static OrderResponse from(Order order) {
         return new OrderResponse(
-                order.getId(), order.getSku(), order.getQuantity(),
-                order.getCustomerId(), order.getAmount(), order.getStatus()
+                order.getId(), order.getSku(), order.getQty(),
+                order.getCustomerId(), order.getAmount(), order.getStatus().name()
         );
     }
 }

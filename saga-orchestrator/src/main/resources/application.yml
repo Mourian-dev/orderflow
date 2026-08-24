@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: saga-orchestrator
+  config:
+    import: "configserver:http://localhost:8888"
