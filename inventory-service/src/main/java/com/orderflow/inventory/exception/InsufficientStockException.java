@@ -1,11 +1,18 @@
 package com.orderflow.inventory.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
 
-@ResponseStatus(HttpStatus.CONFLICT)
+@Getter
 public class InsufficientStockException extends RuntimeException {
+
+    private final String sku;
+    private final int requestedQty;
+    private final int availableQty;
+
     public InsufficientStockException(String sku, int requestedQty, int availableQty) {
         super("Insufficient stock for SKU " + sku + ": requested " + requestedQty + " but only " + availableQty + " available");
+        this.sku = sku;
+        this.requestedQty = requestedQty;
+        this.availableQty = availableQty;
     }
 }
