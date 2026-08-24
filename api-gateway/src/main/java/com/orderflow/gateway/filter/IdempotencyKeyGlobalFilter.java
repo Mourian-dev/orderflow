@@ -48,8 +48,8 @@ public class IdempotencyKeyGlobalFilter implements GlobalFilter, Ordered {
 
         String redisKey = REDIS_KEY_PREFIX + idempotencyKey;
 
-        return redisTemplate.opsForValue().get(redisKey).flatMap(
-                cachedJson -> replay(exchange, cachedJson))
+        return redisTemplate.opsForValue().get(redisKey)
+                .flatMap(cachedJson -> replay(exchange, cachedJson))
                 .switchIfEmpty(Mono.defer(() -> forwardAndCache(exchange, chain, redisKey)))
                 .onErrorResume(JsonProcessingException.class, e -> forwardAndCache(exchange, chain, redisKey));
     }
