@@ -66,7 +66,7 @@ public class SagaOrchestrator {
             }
 
             try {
-                OrderResponse confirmed = orderClient.confirm(orderResponse.id());
+                OrderResponse confirmed = orderClient.confirm(orderResponse.id(), charge.chargeId());
                 log.info("Order confirmed:: id = {} status = {}", confirmed.id(), confirmed.status());
                 return confirmed;
             } catch(RestClientException e) {

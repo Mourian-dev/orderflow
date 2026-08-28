@@ -23,6 +23,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(IllegalOrderStateException.class)
+    public ProblemDetail handleIllegalOrderState(IllegalOrderStateException ex, HttpServletRequest request) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("Conflicting Order State");;
+        problem.setType(URI.create("https://orderflow.internal/errors/conflicting-order-state"));
+        problem.setInstance(URI.create(request.getRequestURI()));
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
     @ExceptionHandler(RestClientException.class)
     public ProblemDetail handleDownStreamFailure(RestClientException ex, HttpServletRequest request) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_GATEWAY);

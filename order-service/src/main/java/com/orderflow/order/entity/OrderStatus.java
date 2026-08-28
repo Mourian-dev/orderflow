@@ -1,5 +1,6 @@
 package com.orderflow.order.entity;
 
 public enum OrderStatus {
-    PENDING, CONFIRMED, FAILED
+    PENDING, CONFIRMED, FAILED,
+    CANCELLING, CANCELLED
 }

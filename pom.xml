@@ -17,6 +17,7 @@
         <module>api-gateway</module>
         <module>payment-service</module>
         <module>saga-orchestrator</module>
+        <module>notification-service</module>
     </modules>
 
     <properties>

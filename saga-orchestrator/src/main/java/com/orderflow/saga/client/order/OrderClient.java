@@ -20,8 +20,9 @@ public class OrderClient {
         return restTemplate.postForObject(ORDERS_URL, request, OrderResponse.class);
     }
 
-    public OrderResponse confirm(Long orderId) {
-        return restTemplate.exchange(ORDERS_URL + "/" + orderId + "/confirm", HttpMethod.PUT, HttpEntity.EMPTY, OrderResponse.class).getBody();
+    public OrderResponse confirm(Long orderId, String chargeId) {
+        HttpEntity<ConfirmRequest> requestEntity = new HttpEntity<>(new ConfirmRequest(chargeId));
+        return restTemplate.exchange(ORDERS_URL + "/" + orderId + "/confirm", HttpMethod.PUT, requestEntity, OrderResponse.class).getBody();
     }
 
     public OrderResponse markFailed(Long orderId, String reason) {

@@ -33,4 +33,10 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    private String chargeId;
+
+    private Boolean stockReleased;
+
+    private Boolean paymentRefunded;
 }

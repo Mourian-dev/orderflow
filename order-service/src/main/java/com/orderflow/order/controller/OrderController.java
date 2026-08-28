@@ -1,5 +1,6 @@
 package com.orderflow.order.controller;
 
+import com.orderflow.order.dto.ConfirmRequest;
 import com.orderflow.order.dto.CreateOrderRequest;
 import com.orderflow.order.dto.MarkFailedRequest;
 import com.orderflow.order.dto.OrderResponse;
@@ -34,13 +35,19 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/confirm")
-    public OrderResponse confirm(@PathVariable Long id) {
-        return OrderResponse.from(orderService.confirm(id));
+    public OrderResponse confirm(@PathVariable Long id, @Valid @RequestBody ConfirmRequest request) {
+        return OrderResponse.from(orderService.confirm(id, request.chargeId()));
     }
 
     @PutMapping("/{id}/fail")
     public OrderResponse fail(@PathVariable Long id, MarkFailedRequest request) {
         return OrderResponse.from(orderService.markFailed(id, request.reason()));
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<OrderResponse> cancel(@PathVariable  Long id) {
+        Order cancelling = orderService.cancel(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(OrderResponse.from(cancelling));
     }
 
     @GetMapping("/{id}")
