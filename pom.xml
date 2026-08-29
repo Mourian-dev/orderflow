@@ -18,6 +18,7 @@
         <module>payment-service</module>
         <module>saga-orchestrator</module>
         <module>notification-service</module>
+        <module>fraud-check-service</module>
     </modules>
 
     <properties>

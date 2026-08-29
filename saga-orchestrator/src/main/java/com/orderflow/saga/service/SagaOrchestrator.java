@@ -1,6 +1,7 @@
 package com.orderflow.saga.service;
 
 import com.orderflow.saga.client.fraudCheck.FraudCheckClient;
+import com.orderflow.saga.client.fraudCheck.FraudCheckResponse;
 import com.orderflow.saga.client.fraudCheck.FraudDecision;
 import com.orderflow.saga.client.inventory.InventoryClient;
 import com.orderflow.saga.client.inventory.InventoryReserveResponse;
@@ -37,21 +38,21 @@ public class SagaOrchestrator {
         Deque<Runnable> compensations = new ArrayDeque<>();
 
         try {
-            CompletableFuture<FraudDecision> fraudFuture = CompletableFuture.supplyAsync(() -> fraudCheckClient.evaluate(cmd), sagaExecutor);
+            CompletableFuture<FraudCheckResponse> fraudFuture = CompletableFuture.supplyAsync(() -> fraudCheckClient.evaluate(orderResponse.id(), cmd), sagaExecutor);
             CompletableFuture<InventoryReserveResponse> inventoryFuture = CompletableFuture.supplyAsync(() -> inventoryClient.reserve(cmd.sku(), cmd.qty()), sagaExecutor);
 
-            FraudDecision fraudDecision;
+            FraudCheckResponse fraudResult;
 
             try {
                 CompletableFuture.allOf(fraudFuture, inventoryFuture).join();
-                fraudDecision = fraudFuture.join();
+                fraudResult = fraudFuture.join();
                 inventoryFuture.join();
                 compensations.push(() -> inventoryClient.release(orderResponse.sku(), orderResponse.qty()));
             } catch(CompletionException e) {
                 return failOrder(orderResponse.id(), "inventory_unavailable: " + rootMessage(e));
             }
 
-            if(fraudDecision != FraudDecision.APPROVE) {
+            if(!"APPROVE".equals(fraudResult.decision())) {
                 runCompensation(compensations);
                 return failOrder(orderResponse.id(), "fraud_declined");
             }
